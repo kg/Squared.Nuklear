@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,16 +29,27 @@ namespace NuklearDotNet {
 		static bool ForceUpdateQueued;
 
 		// TODO: Support swapping this, native memcmp is the fastest so it's used here
+		[SuppressUnmanagedCodeSecurity]
 		[DllImport("msvcrt", EntryPoint = "memcmp", CallingConvention = CallingConvention.Cdecl)]
-		static extern int MemCmp(IntPtr A, IntPtr B, IntPtr Count);
+		public static extern int Memcmp(IntPtr A, IntPtr B, IntPtr Count);
+		[SuppressUnmanagedCodeSecurity]
+		[DllImport("msvcrt", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void Memcpy(IntPtr A, IntPtr B, IntPtr Count);
+		[SuppressUnmanagedCodeSecurity]
+		[DllImport("msvcrt", EntryPoint = "memset", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void Memset(IntPtr A, int Value, IntPtr Count);
+		[SuppressUnmanagedCodeSecurity]
+		[DllImport("msvcrt", EntryPoint = "malloc", CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr Malloc(IntPtr size);
+		[SuppressUnmanagedCodeSecurity]
+		[DllImport("msvcrt", EntryPoint = "free", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void StdFree(IntPtr P);
 
 		static IntPtr ManagedAlloc(IntPtr Size, bool ClearMem = true) {
-			IntPtr Mem = Marshal.AllocHGlobal(Size);
+			IntPtr Mem = Malloc(Size);
 
-			if (ClearMem) {
-				for (int i = 0; i < (int)Size; i++)
-					Marshal.WriteByte(Mem, i, 0);
-			}
+			if (ClearMem) 
+				Memset(Mem, 0, Size);
 
 			return Mem;
 		}
@@ -47,7 +59,7 @@ namespace NuklearDotNet {
 		}
 
 		static void ManagedFree(IntPtr Mem) {
-			Marshal.FreeHGlobal(Mem);
+			StdFree(Mem);
 		}
 
 		static void FontStash(FontStashAction A = null) {
@@ -135,7 +147,7 @@ namespace NuklearDotNet {
 
 					if (!Dirty) {
 						fixed (byte* LastMemoryPtr = LastMemory)
-							if (MemCmp(new IntPtr(LastMemoryPtr), MemoryBuffer, Ctx->memory.allocated) != 0) {
+							if (Memcmp(new IntPtr(LastMemoryPtr), MemoryBuffer, Ctx->memory.allocated) != 0) {
 								Dirty = true;
 								Marshal.Copy(MemoryBuffer, LastMemory, 0, (int)Ctx->memory.allocated);
 							}
