@@ -205,6 +205,18 @@ namespace NuklearDotNet {
 			FrameBuffered?.RenderFinal();
 		}
 
+        public static nk_allocator* MakeAllocator () {
+			var result = (nk_allocator*)ManagedAlloc(sizeof(nk_allocator));
+
+			Alloc = (Handle, Old, Size) => ManagedAlloc(Size);
+			Free = (Handle, Old) => ManagedFree(Old);
+
+			result->alloc_nkpluginalloct = Marshal.GetFunctionPointerForDelegate(Alloc);
+			result->free_nkpluginfreet = Marshal.GetFunctionPointerForDelegate(Free);
+
+            return result;
+        }
+
 		//public  NuklearAPI(NuklearDevice Device) {
 		public static void Init(NuklearDevice Device) {
 			Dev = Device;
@@ -212,7 +224,7 @@ namespace NuklearDotNet {
 
 			// TODO: Free these later
 			Ctx = (nk_context*)ManagedAlloc(sizeof(nk_context));
-			Allocator = (nk_allocator*)ManagedAlloc(sizeof(nk_allocator));
+            Allocator = MakeAllocator();
 			FontAtlas = (nk_font_atlas*)ManagedAlloc(sizeof(nk_font_atlas));
 			NullTexture = (nk_draw_null_texture*)ManagedAlloc(sizeof(nk_draw_null_texture));
 			ConvertCfg = (nk_convert_config*)ManagedAlloc(sizeof(nk_convert_config));
@@ -228,12 +240,6 @@ namespace NuklearDotNet {
 			VertexLayout[2] = new nk_draw_vertex_layout_element(nk_draw_vertex_layout_attribute.NK_VERTEX_COLOR, nk_draw_vertex_layout_format.NK_FORMAT_R8G8B8A8,
 				Marshal.OffsetOf(typeof(NkVertex), nameof(NkVertex.Color)));
 			VertexLayout[3] = nk_draw_vertex_layout_element.NK_VERTEX_LAYOUT_END;
-
-			Alloc = (Handle, Old, Size) => ManagedAlloc(Size);
-			Free = (Handle, Old) => ManagedFree(Old);
-
-			Allocator->alloc_nkpluginalloct = Marshal.GetFunctionPointerForDelegate(Alloc);
-			Allocator->free_nkpluginfreet = Marshal.GetFunctionPointerForDelegate(Free);
 
 			Nuklear.nk_init(Ctx, Allocator, null);
 
