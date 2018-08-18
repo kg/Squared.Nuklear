@@ -8,15 +8,17 @@ using System.Threading.Tasks;
 namespace NuklearDotNet {
 	[StructLayout(LayoutKind.Sequential)]
 	public struct nk_user_font_glyph {
-		public nk_vec2 u;
-		public nk_vec2 v;
+		public nk_vec2 uv0;
+		public nk_vec2 uv1;
 		public nk_vec2 offset;
 		public float width;
 		public float height;
 		public float xadvance;
 	}
 
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public unsafe delegate float nk_text_width_f(NkHandle handle, float h, byte* s, int len);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public unsafe delegate void nk_query_font_glyph_f(NkHandle handle, float font_height, nk_user_font_glyph* glyph, uint codepoint, uint next_codepoint);
 
 	[StructLayout(LayoutKind.Sequential)]

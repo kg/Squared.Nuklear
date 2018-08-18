@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NuklearDotNet {
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public unsafe delegate void FontStashAction(IntPtr Atlas);
 
 	public static unsafe class NuklearAPI {
-		static nk_context* Ctx;
+		public static nk_context* Ctx;
 		static nk_allocator* Allocator;
 		static nk_font_atlas* FontAtlas;
 		static nk_draw_null_texture* NullTexture;
@@ -44,6 +45,8 @@ namespace NuklearDotNet {
 		[SuppressUnmanagedCodeSecurity]
 		[DllImport("msvcrt", EntryPoint = "free", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void StdFree(IntPtr P);
+
+		public delegate void HighLevelRenderHandler (nk_command *c);
 
 		static IntPtr ManagedAlloc(IntPtr Size, bool ClearMem = true) {
 			IntPtr Mem = Malloc(Size);
@@ -127,7 +130,7 @@ namespace NuklearDotNet {
 			return HasInput;
 		}
 
-		static void Render(bool HadInput) {
+		static void Render(bool HadInput, HighLevelRenderHandler handler) {
 			if (HadInput) {
 				bool Dirty = true;
 
@@ -155,39 +158,46 @@ namespace NuklearDotNet {
 				}
 
 				if (Dirty) {
-					NkConvertResult R = (NkConvertResult)Nuklear.nk_convert(Ctx, Commands, Vertices, Indices, ConvertCfg);
-					if (R != NkConvertResult.Success)
-						throw new Exception(R.ToString());
+                    if (handler != null) {
+                        Nuklear.nk_foreach(Ctx, (Cmd) => {
+                            handler(Cmd);
+                        });
+                    } else {
+                        NkConvertResult R = (NkConvertResult)Nuklear.nk_convert(Ctx, Commands, Vertices, Indices, ConvertCfg);
+					    if (R != NkConvertResult.Success)
+						    throw new Exception(R.ToString());
 
-					NkVertex[] NkVerts = new NkVertex[(int)Vertices->needed / sizeof(NkVertex)];
-					NkVertex* VertsPtr = (NkVertex*)Vertices->memory.ptr;
+					    NkVertex[] NkVerts = new NkVertex[(int)Vertices->needed / sizeof(NkVertex)];
+					    NkVertex* VertsPtr = (NkVertex*)Vertices->memory.ptr;
 
-					for (int i = 0; i < NkVerts.Length; i++) {
-						//NkVertex* V = &VertsPtr[i];
-						//NkVerts[i] = new NkVertex() { Position = new NkVector2f() { X = (int)V->Position.X, Y = (int)V->Position.Y }, Color = V->Color, UV = V->UV };
+					    for (int i = 0; i < NkVerts.Length; i++) {
+						    //NkVertex* V = &VertsPtr[i];
+						    //NkVerts[i] = new NkVertex() { Position = new NkVector2f() { X = (int)V->Position.X, Y = (int)V->Position.Y }, Color = V->Color, UV = V->UV };
 
-						NkVerts[i] = VertsPtr[i];
-					}
+						    NkVerts[i] = VertsPtr[i];
+					    }
 
-					ushort[] NkIndices = new ushort[(int)Indices->needed / sizeof(ushort)];
-					ushort* IndicesPtr = (ushort*)Indices->memory.ptr;
-					for (int i = 0; i < NkIndices.Length; i++)
-						NkIndices[i] = IndicesPtr[i];
+					    ushort[] NkIndices = new ushort[(int)Indices->needed / sizeof(ushort)];
+					    ushort* IndicesPtr = (ushort*)Indices->memory.ptr;
+					    for (int i = 0; i < NkIndices.Length; i++)
+						    NkIndices[i] = IndicesPtr[i];
 
-					Dev.SetBuffer(NkVerts, NkIndices);
-					FrameBuffered?.BeginBuffering();
+					    Dev.SetBuffer(NkVerts, NkIndices);
+					    FrameBuffered?.BeginBuffering();
 
-					uint Offset = 0;
-					Nuklear.nk_draw_foreach(Ctx, Commands, (Cmd) => {
-						if (Cmd->elem_count == 0)
-							return;
+					    uint Offset = 0;
+					    Nuklear.nk_draw_foreach(Ctx, Commands, (Cmd) => {
+						    if (Cmd->elem_count == 0)
+							    return;
 
-						Dev.Render(Cmd->userdata, Cmd->texture.id, Cmd->clip_rect, Offset, Cmd->elem_count);
-						Offset += Cmd->elem_count;
-					});
+						    Dev.Render(Cmd->userdata, Cmd->texture.id, Cmd->clip_rect, Offset, Cmd->elem_count);
+						    Offset += Cmd->elem_count;
+					    });
 
-					FrameBuffered?.EndBuffering();
+					    FrameBuffered?.EndBuffering();
+                    }
 				}
+
 
 				Nuklear.nk_clear(Ctx);
 			}
@@ -246,7 +256,12 @@ namespace NuklearDotNet {
 			Nuklear.nk_buffer_init(Indices, Allocator, new IntPtr(4 * 1024));
 		}
 
-		public static void Frame(Action A) {
+        public static nk_user_font* AllocUserFont () {
+            var result = (nk_user_font*)ManagedAlloc((IntPtr)sizeof(nk_user_font), true);
+            return result;
+        }
+
+		public static void Frame(Action A, HighLevelRenderHandler B = null) {
 			if (ForceUpdateQueued) {
 				ForceUpdateQueued = false;
 
@@ -256,7 +271,7 @@ namespace NuklearDotNet {
 			bool HasInput;
 			if (HasInput = HandleInput())
 				A();
-			Render(HasInput);
+			Render(HasInput, B);
 		}
 
 		public static void SetDeltaTime(float Delta) {
