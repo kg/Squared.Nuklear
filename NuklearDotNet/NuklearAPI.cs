@@ -158,12 +158,12 @@ namespace NuklearDotNet {
 				}
 
 				if (Dirty) {
-                    if (handler != null) {
-                        Nuklear.nk_foreach(Ctx, (Cmd) => {
-                            handler(Cmd);
-                        });
-                    } else {
-                        NkConvertResult R = (NkConvertResult)Nuklear.nk_convert(Ctx, Commands, Vertices, Indices, ConvertCfg);
+					if (handler != null) {
+						Nuklear.nk_foreach(Ctx, (Cmd) => {
+							handler(Cmd);
+						});
+					} else {
+						NkConvertResult R = (NkConvertResult)Nuklear.nk_convert(Ctx, Commands, Vertices, Indices, ConvertCfg);
 					    if (R != NkConvertResult.Success)
 						    throw new Exception(R.ToString());
 
