@@ -8,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace NuklearDotNet {
     public static unsafe class NuklearAPI {
-        public static nk_context* Ctx;
         static nk_allocator* Allocator;
-        static nk_font_atlas* FontAtlas;
         static nk_draw_null_texture* NullTexture;
-        static nk_convert_config* ConvertCfg;
 
-        static nk_buffer* Commands, Vertices, Indices;
-        static byte[] LastMemory;
+        static nk_buffer* Commands;
 
-        static nk_draw_vertex_layout_element* VertexLayout;
         static nk_plugin_alloc_t Alloc;
         static nk_plugin_free_t Free;
 
@@ -57,14 +52,12 @@ namespace NuklearDotNet {
             StdFree(Mem);
         }
 
-        public static void Render (bool HadInput, HighLevelRenderHandler handler) {
-            if (HadInput) {
-                Nuklear.nk_foreach(Ctx, (Cmd) => {
-                    handler(Cmd);
-                });
+        public static void Render (nk_context* ctx, HighLevelRenderHandler handler) {
+            Nuklear.nk_foreach(ctx, (Cmd) => {
+                handler(Cmd);
+            });
 
-                Nuklear.nk_clear(Ctx);
-            }
+            Nuklear.nk_clear(ctx);
         }
 
         public static nk_allocator* MakeAllocator () {
@@ -79,29 +72,26 @@ namespace NuklearDotNet {
             return result;
         }
 
-        public static void Init() {
+        public static nk_context* Init () {
             // TODO: Free these later
-            Ctx = (nk_context*)ManagedAlloc(sizeof(nk_context));
+            var ctx = (nk_context*)ManagedAlloc(sizeof(nk_context));
             Allocator = MakeAllocator();
             NullTexture = (nk_draw_null_texture*)ManagedAlloc(sizeof(nk_draw_null_texture));
             Commands = (nk_buffer*)ManagedAlloc(sizeof(nk_buffer));
 
-            Nuklear.nk_init(Ctx, Allocator, null);
+            Nuklear.nk_init(ctx, Allocator, null);
 
             Nuklear.nk_buffer_init(Commands, Allocator, new IntPtr(4 * 1024));
+
+            return ctx;
         }
 
         public static nk_user_font* AllocUserFont () {
             var result = (nk_user_font*)ManagedAlloc((IntPtr)sizeof(nk_user_font), true);
             return result;
-        }
+        }        
 
-        public static void SetDeltaTime(float Delta) {
-            if (Ctx != null)
-                Ctx->delta_time_Seconds = Delta;
-        }
-
-        public static void SetClipboardCallback(Action<string> CopyFunc, Func<string> PasteFunc) {
+        public static void SetClipboardCallback(nk_context* ctx, Action<string> CopyFunc, Func<string> PasteFunc) {
             // TODO: Contains alloc and forget, don't call SetClipboardCallback too many times
 
             nk_plugin_copy_t NkCopyFunc = (Handle, Str, Len) => {
@@ -126,8 +116,8 @@ namespace NuklearDotNet {
             GCHandle.Alloc(NkCopyFunc);
             GCHandle.Alloc(NkPasteFunc);
 
-            Ctx->clip.copyfun_nkPluginCopyT = Marshal.GetFunctionPointerForDelegate(NkCopyFunc);
-            Ctx->clip.pastefun_nkPluginPasteT = Marshal.GetFunctionPointerForDelegate(NkPasteFunc);
+            ctx->clip.copyfun_nkPluginCopyT = Marshal.GetFunctionPointerForDelegate(NkCopyFunc);
+            ctx->clip.pastefun_nkPluginPasteT = Marshal.GetFunctionPointerForDelegate(NkPasteFunc);
         }
     }
 }

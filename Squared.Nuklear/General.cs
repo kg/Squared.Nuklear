@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace NuklearDotNet {
     public enum nk_bool {
@@ -35,6 +36,19 @@ namespace NuklearDotNet {
     public struct nk_vec2 {
         public float x;
         public float y;
+
+        public nk_vec2 (float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public static explicit operator Vector2 (nk_vec2 v) {
+            return new Vector2(v.x, v.y);
+        }
+
+        public static explicit operator nk_vec2 (Vector2 v) {
+            return new nk_vec2 { x = v.X, y = v.Y };
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
