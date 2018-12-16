@@ -421,10 +421,7 @@ namespace NuklearDotNet {
         public static extern int nk_group_begin_titled(nk_context* ctx, string id, string title, uint nkflags);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_group_scrolled_offset_begin(nk_context* ctx, uint* x_offset, uint* y_offset, byte* s, uint nkflags);
-
-        [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_group_scrolled_begin(nk_context* ctx, nk_scroll* scroll, byte* title, uint nkflags);
+        public static extern int nk_group_scrolled_offset_begin(nk_context* ctx, ref uint x_offset, ref uint y_offset, byte* s, uint nkflags);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern void nk_group_scrolled_end(nk_context* ctx);
@@ -433,10 +430,10 @@ namespace NuklearDotNet {
         public static extern void nk_group_end(nk_context* ctx);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_list_view_begin(nk_context* ctx, nk_list_view* nlv_out, byte* id, uint nkflags, int row_height, int row_count);
+        public static extern int nk_list_view_begin(nk_context* ctx, out nk_list_view nlv_out, byte* id, uint nkflags, int row_height, int row_count);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern void nk_list_view_end(nk_list_view* nlv);
+        public static extern void nk_list_view_end(ref nk_list_view nlv);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern int nk_tree_push_hashed(nk_context* ctx, nk_tree_type tree_type, byte* title, nk_collapse_states initial_state, byte* hash, int len, int seed);
@@ -633,16 +630,16 @@ namespace NuklearDotNet {
         public static extern int nk_option_text(nk_context* ctx, byte* s, int i, int active);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_selectable_label(nk_context* ctx, byte* s, uint align_nkflags, int* val);
+        public static extern int nk_selectable_label(nk_context* ctx, byte* s, uint align_nkflags, ref int val);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_selectable_text(nk_context* ctx, byte* s, int i, uint align_nkflags, int* val);
+        public static extern int nk_selectable_text(nk_context* ctx, byte* s, int length, uint align_nkflags, ref int val);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_selectable_image_label(nk_context* ctx, nk_image img, byte* s, uint align_nkflags, int* val);
+        public static extern int nk_selectable_image_label(nk_context* ctx, nk_image img, byte* s, uint align_nkflags, ref int val);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_selectable_image_text(nk_context* ctx, nk_image img, byte* s, int i, uint align_nkflags, int* val);
+        public static extern int nk_selectable_image_text(nk_context* ctx, nk_image img, byte* s, int i, uint align_nkflags, ref int val);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern int nk_select_label(nk_context* ctx, byte* s, uint align_nkflags, int val);

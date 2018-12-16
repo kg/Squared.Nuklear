@@ -36,7 +36,7 @@ namespace NuklearDotNet {
         public static extern void nk_layout_row_end(nk_context* ctx);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern void nk_layout_row(nk_context* ctx, nk_layout_format fmt, float height, int cols, float* ratio);
+        public static extern void nk_layout_row(nk_context* ctx, nk_layout_format fmt, float height, int cols, float[] ratio);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern void nk_layout_row_template_begin(nk_context* ctx, float row_height);

@@ -385,26 +385,6 @@ nk_utf_encode
 nk_utf_len
 nk_utf_at
 
-nk_font_default_glyph_ranges
-nk_font_chinese_glyph_ranges
-nk_font_cyrillic_glyph_ranges
-nk_font_korean_glyph_ranges
-
-nk_font_atlas_init
-nk_font_atlas_init_custom
-nk_font_atlas_begin
-nk_font_config
-nk_font_atlas_add
-nk_font_atlas_add_default
-nk_font_atlas_add_from_memory
-nk_font_atlas_add_compressed
-nk_font_atlas_add_compressed_base85
-nk_font_atlas_bake
-nk_font_atlas_end
-nk_font_find_glyph
-nk_font_atlas_cleanup
-nk_font_atlas_clear
-
 nk_buffer_init
 nk_buffer_init_fixed
 nk_buffer_info
