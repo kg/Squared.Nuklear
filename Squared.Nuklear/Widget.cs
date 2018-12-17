@@ -672,10 +672,10 @@ namespace NuklearDotNet {
         public static extern IntPtr nk_prog(nk_context* ctx, IntPtr cur_nksize, IntPtr max_nksize, int modifyable);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern NkColor nk_color_picker(nk_context* ctx, NkColor color, nk_color_format cfmt);
+        public static extern nk_colorf nk_color_picker(nk_context* ctx, nk_colorf color, nk_color_format cfmt);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern int nk_color_pick(nk_context* ctx, NkColor* color, nk_color_format cfmt);
+        public static extern int nk_color_pick(nk_context* ctx, nk_colorf* color, nk_color_format cfmt);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern void nk_property_int(nk_context* ctx, byte* name, int min, int* val, int max, int step, float inc_per_pixel);
