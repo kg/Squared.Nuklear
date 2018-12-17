@@ -774,7 +774,7 @@ namespace NuklearDotNet {
         public static extern void nk_combobox_separator(nk_context* ctx, byte* items_separated_by_separator, int separator, int* selected, int count, int item_height, nk_vec2 size);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
-        public static extern void nk_combobox_callback(nk_context* ctx, nk_item_getter_fun getterfun, IntPtr userdata, int* selected, int count, int item_height, nk_vec2 size);
+        public static extern void nk_combobox_callback(nk_context* ctx, nk_item_getter_fun getterfun, IntPtr userdata, ref int selected, int count, int item_height, nk_vec2 size);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern int nk_combo_begin_text(nk_context* ctx, char* selected, int i, nk_vec2 size);
