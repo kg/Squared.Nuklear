@@ -62,11 +62,43 @@ namespace NuklearDotNet {
         NK_COMMAND_CUSTOM
     }
 
+    public enum nk_meta_type {
+        NK_META_NONE,
+        NK_META_BUTTON,
+        NK_META_PROPERTY,
+        NK_META_PROPERTY_LEFT,
+        NK_META_PROPERTY_RIGHT,
+        NK_META_PROPERTY_LABEL,
+        NK_META_PROPERTY_VALUE,
+        NK_META_SCROLLBAR,
+        NK_META_SCROLLBAR_CURSOR,
+        NK_META_SCALER,
+        NK_META_SLIDER_BACKGROUND,
+        NK_META_SLIDER_TRACK,
+        NK_META_SLIDER_HANDLE,
+        NK_META_COLOR_SATURATION_VALUE,
+        NK_META_COLOR_HUE,
+        NK_META_COLOR_ALPHA,
+        NK_META_WINDOW_BORDER,
+        NK_META_TREE_HEADER_BORDER,
+        NK_META_TREE_HEADER,
+        NK_META_TREE_HEADER_TEXT,
+        NK_META_CHECKBOX,
+        NK_META_OPTION,
+        NK_META_SELECTABLE,
+        NK_META_PROGRESS,
+        NK_META_PROGRESS_CURSOR,
+        NK_META_SELECTION,
+        NK_META_CHART,
+        NK_META_COMBO
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public struct nk_command {
         public nk_command_type ctype;
         public IntPtr next_nksize;
         public NkHandle userdata;
+        public nk_meta_type mtype;
     }
 
     [StructLayout(LayoutKind.Sequential)]
