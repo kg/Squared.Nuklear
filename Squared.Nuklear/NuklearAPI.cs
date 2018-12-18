@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace NuklearDotNet {
     public static unsafe class NuklearAPI {
+        static Nuklear.AssertHandler _OnNuklearAssert;
+
         static nk_allocator* Allocator;
         static nk_draw_null_texture* NullTexture;
 
@@ -33,6 +35,8 @@ namespace NuklearDotNet {
         [DllImport("msvcrt", EntryPoint = "free", CallingConvention = CallingConvention.Cdecl)]
         public static extern void StdFree(IntPtr P);
 
+        [SuppressUnmanagedCodeSecurity]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void HighLevelRenderHandler (nk_command *c);
 
         static IntPtr ManagedAlloc (IntPtr Size, bool ClearMem = true) {
@@ -72,7 +76,19 @@ namespace NuklearDotNet {
             return result;
         }
 
+        private static void OnNuklearAssert (byte* file, int line, byte* expr) {
+            var msg = "Assertion failed";
+            if (file != null)
+                msg += " at " + System.IO.Path.GetFileName(new string((sbyte*)file)) + ":" + line;
+            if (expr != null)
+                msg += ": " + new string((sbyte*)expr);
+            throw new NuklearException(msg);
+        }
+
         public static nk_context* Init () {
+            _OnNuklearAssert = OnNuklearAssert;
+            Nuklear.nk_set_assert_handler(_OnNuklearAssert);
+
             // TODO: Free these later
             var ctx = (nk_context*)ManagedAlloc(sizeof(nk_context));
             Allocator = MakeAllocator();
@@ -118,6 +134,12 @@ namespace NuklearDotNet {
 
             ctx->clip.copyfun_nkPluginCopyT = Marshal.GetFunctionPointerForDelegate(NkCopyFunc);
             ctx->clip.pastefun_nkPluginPasteT = Marshal.GetFunctionPointerForDelegate(NkPasteFunc);
+        }
+    }
+
+    public class NuklearException : Exception {
+        public NuklearException (string msg)
+            : base (msg) {
         }
     }
 }

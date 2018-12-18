@@ -409,6 +409,12 @@ namespace NuklearDotNet {
     }
 
     public static unsafe partial class Nuklear {
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void AssertHandler (byte* file, int line, byte* expression);
+
+        [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
+        public static extern int nk_set_assert_handler(AssertHandler handler);
+
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern int nk_init_fixed(nk_context* context, IntPtr memory, IntPtr size, nk_user_font* userfont);
 

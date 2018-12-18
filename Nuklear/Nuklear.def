@@ -1,6 +1,8 @@
 LIBRARY Nuklear
 EXPORTS
 
+nk_set_assert_handler
+
 nk_init_fixed
 nk_init
 nk_init_custom
@@ -18,10 +20,6 @@ nk_input_unicode
 nk_input_end
 nk__begin
 nk__next
-nk_convert
-nk__draw_begin
-nk__draw_end
-nk__draw_next
 
 nk_begin
 nk_begin_titled
@@ -491,39 +489,6 @@ nk_input_is_mouse_released
 nk_input_is_key_pressed
 nk_input_is_key_released
 nk_input_is_key_down
-
-nk_draw_list_init
-nk_draw_list_setup
-
-nk__draw_list_begin
-nk__draw_list_next
-nk__draw_list_end
-
-nk_draw_list_path_clear
-nk_draw_list_path_line_to
-nk_draw_list_path_arc_to_fast
-nk_draw_list_path_arc_to
-nk_draw_list_path_rect_to
-nk_draw_list_path_curve_to
-nk_draw_list_path_fill
-nk_draw_list_path_stroke
-
-nk_draw_list_stroke_line
-nk_draw_list_stroke_rect
-nk_draw_list_stroke_triangle
-nk_draw_list_stroke_circle
-nk_draw_list_stroke_curve
-nk_draw_list_stroke_poly_line
-
-nk_draw_list_fill_rect
-nk_draw_list_fill_rect_multi_color
-nk_draw_list_fill_triangle
-nk_draw_list_fill_circle
-nk_draw_list_fill_poly_convex
-
-nk_draw_list_add_image
-nk_draw_list_add_text
-nk_draw_list_push_userdata
 
 nk_style_item_image
 nk_style_item_color
