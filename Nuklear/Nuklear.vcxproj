@@ -70,25 +70,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)\..\bin_dbg\</OutDir>
-    <IncludePath>$(ProjectDir)..\nuklear_c\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\nuklear_c_kg\;$(IncludePath)</IncludePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin_dbg\</OutDir>
-    <IncludePath>$(ProjectDir)..\nuklear_c\;$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)\..\bin\</OutDir>
-    <IncludePath>$(ProjectDir)..\nuklear_c\;$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\</OutDir>
-    <IncludePath>$(ProjectDir)..\nuklear_c\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\nuklear_c_kg\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -160,7 +150,7 @@
     <ClCompile Include="Nuklear.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\nuklear_c\nuklear.h" />
+    <ClInclude Include="..\nuklear_c_kg\nuklear.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Nuklear.def" />
