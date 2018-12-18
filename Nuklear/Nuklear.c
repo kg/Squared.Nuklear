@@ -8,6 +8,8 @@
 
 #define NK_INPUT_MAX 512
 
+#define NK_REPEATER_INTERVAL 12
+
 typedef void (*assertHandler)(const char*, int, const char*);
 
 assertHandler globalAssertHandler = 0;
