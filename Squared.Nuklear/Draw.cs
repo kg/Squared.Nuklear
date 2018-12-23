@@ -79,6 +79,7 @@ namespace NuklearDotNet {
         NK_META_COLOR_SATURATION_VALUE,
         NK_META_COLOR_HUE,
         NK_META_COLOR_ALPHA,
+        NK_META_WINDOW,
         NK_META_WINDOW_BORDER,
         NK_META_TREE_HEADER_BORDER,
         NK_META_TREE_HEADER,
