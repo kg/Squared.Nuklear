@@ -493,3 +493,5 @@ nk_input_is_key_down
 nk_style_item_image
 nk_style_item_color
 nk_style_item_hide
+
+nk_set_scene_bounds

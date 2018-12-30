@@ -387,6 +387,7 @@ namespace NuklearDotNet {
         public nk_button_behavior button_behavior;
         public nk_configuration_stacks stacks;
         public float delta_time_Seconds;
+        public float tooltip_vertical_offset;
 
         public nk_draw_list draw_list;
 

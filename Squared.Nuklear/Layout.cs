@@ -9,6 +9,9 @@ namespace NuklearDotNet {
     // [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
     public static unsafe partial class Nuklear {
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
+        public static extern void nk_set_scene_bounds(nk_context* ctx, float x1, float y1, float x2, float y2);
+
+        [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
         public static extern void nk_layout_set_min_row_height(nk_context* ctx, float height);
 
         [DllImport(DllName, CallingConvention = CConv, CharSet = CSet)]
