@@ -14,10 +14,7 @@ typedef void (*assertHandler)(const char*, int, const char*);
 
 assertHandler globalAssertHandler = 0;
 
-void _nk_do_assert (int cond, const char* file, int line, const char* expr) {
-    if (cond)
-        return;
-
+void _nk_failed_assert (const char* file, int line, const char* expr) {
     if (globalAssertHandler != 0)
         globalAssertHandler(file, line, expr);
     else
@@ -29,6 +26,6 @@ void nk_set_assert_handler (assertHandler handler) {
     globalAssertHandler = handler;
 }
 
-#define NK_ASSERT(cond) _nk_do_assert(cond, __FILE__, __LINE__, #cond)
+#define NK_ASSERT(cond) if (!(cond)) { _nk_failed_assert(__FILE__, __LINE__, #cond); }
 
 #include <nuklear.h>
