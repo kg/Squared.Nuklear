@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\nuklear_c\nuklear.h">
+    <ClInclude Include="..\nuklear_c_kg\nuklear.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -86,6 +87,9 @@ namespace NuklearDotNet {
         }
 
         public static nk_context* Init () {
+            var loader = new Squared.Util.EmbeddedDLLLoader(Assembly.GetExecutingAssembly());
+            loader.Load("nuklear.dll");
+
             _OnNuklearAssert = OnNuklearAssert;
             Nuklear.nk_set_assert_handler(_OnNuklearAssert);
 

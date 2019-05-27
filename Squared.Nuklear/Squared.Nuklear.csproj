@@ -72,11 +72,18 @@
     <Compile Include="General.cs" />
     <Compile Include="Nuklear.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="..\Nuklear\bin-$(PlatformTarget)-$(Configuration)\Nuklear.dll">
+      <LogicalName>nuklear.dll</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Fracture\Squared\RenderLib\Squared.Render.csproj">
       <Project>{fe871f18-fd35-4124-af8f-0021c9d4ba29}</Project>
       <Name>Squared.Render</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Fracture\Squared\Util\Squared.Util.csproj">
+      <Project>{d7f549cf-e0a6-491c-a78c-ecab590bb2a7}</Project>
+      <Name>Squared.Util</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
