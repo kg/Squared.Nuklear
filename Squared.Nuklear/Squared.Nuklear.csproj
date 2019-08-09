@@ -75,6 +75,9 @@
     <EmbeddedResource Include="..\Nuklear\bin-$(PlatformTarget)-$(Configuration)\Nuklear.dll">
       <LogicalName>nuklear.dll</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\Nuklear\bin-$(PlatformTarget)-$(Configuration)\Nuklear.pdb">
+      <LogicalName>nuklear.pdb</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Fracture\Squared\RenderLib\Squared.Render.csproj">
